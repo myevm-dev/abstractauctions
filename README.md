@@ -1,4 +1,4 @@
-# E-Commerce Platform Template
+# E-Commerce Template
 
 ## Project info
 
