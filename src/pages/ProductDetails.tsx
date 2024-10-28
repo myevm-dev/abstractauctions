@@ -1,11 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Star, Plus, Minus } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/cart';
 import { getProductById, getSimilarProducts } from '@/lib/products';
 import { toast } from '@/components/ui/use-toast';
-import ProductCard from '@/components/products/ProductCard';
 import {
   Carousel,
   CarouselContent,
@@ -16,6 +15,7 @@ import {
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const product = getProductById(id || '');
   const similarProducts = product ? getSimilarProducts(product) : [];
   const addItem = useCartStore((state) => state.addItem);
@@ -61,8 +61,8 @@ const ProductDetails = () => {
                 key={i}
                 className={`h-5 w-5 ${
                   i < Math.floor(product.rating)
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-gray-300'
+                    ? 'fill-neutral-900 text-neutral-900'
+                    : 'text-neutral-300'
                 }`}
               />
             ))}
@@ -71,7 +71,7 @@ const ProductDetails = () => {
             </span>
           </div>
 
-          <div className="text-2xl font-bold text-brand-600">
+          <div className="text-2xl font-bold text-neutral-900">
             ${product.price.toFixed(2)}
           </div>
 
@@ -81,7 +81,7 @@ const ProductDetails = () => {
 
           <Button
             onClick={handleAddToCart}
-            className="w-full md:w-auto bg-brand-600 hover:bg-brand-700 text-white"
+            className="w-full md:w-auto bg-neutral-900 hover:bg-neutral-800 text-white"
           >
             Add to Cart
           </Button>
@@ -93,8 +93,25 @@ const ProductDetails = () => {
         <Carousel className="w-full">
           <CarouselContent>
             {similarProducts.map((product) => (
-              <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/4">
-                <ProductCard product={product} />
+              <CarouselItem 
+                key={product.id} 
+                className="md:basis-1/2 lg:basis-1/4 cursor-pointer"
+                onClick={() => navigate(`/product/${product.id}`)}
+              >
+                <div className="relative group">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full aspect-square object-cover rounded-lg group-hover:opacity-75 transition-opacity"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-white text-lg font-semibold bg-black/50 px-4 py-2 rounded">
+                      View Details
+                    </span>
+                  </div>
+                </div>
+                <h3 className="mt-2 font-semibold">{product.name}</h3>
+                <p className="text-neutral-900 font-bold">${product.price.toFixed(2)}</p>
               </CarouselItem>
             ))}
           </CarouselContent>
