@@ -1,4 +1,4 @@
-# Welcome to your GPT Engineer project
+# E-Commerce Platform Template
 
 ## Project info
 
