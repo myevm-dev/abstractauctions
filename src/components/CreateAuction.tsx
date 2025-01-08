@@ -1,57 +1,47 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ethers } from 'ethers';  // Import ethers as usual
+import { ethers } from 'ethers';
+import { FaCalendarAlt } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-// Destructure parseUnits from ethers
-const { parseUnits } = ethers;
-
-// Smart contract ABI and address (same as before)
 const auctionContractAddress = '0xdbEf63D610347231B38c141465A3671abb7BCCe5';
-const auctionContractABI = [
-  {
-    "constant": false,
-    "inputs": [
-      { "name": "assetContract", "type": "address" },
-      { "name": "tokenId", "type": "uint256" },
-      { "name": "quantity", "type": "uint256" },
-      { "name": "currency", "type": "address" },
-      { "name": "minimumBidAmount", "type": "uint256" },
-      { "name": "buyoutBidAmount", "type": "uint256" },
-      { "name": "timeBufferInSeconds", "type": "uint64" },
-      { "name": "bidBufferBps", "type": "uint64" },
-      { "name": "startTimestamp", "type": "uint64" },
-      { "name": "endTimestamp", "type": "uint64" }
-    ],
-    "name": "createAuction",
-    "outputs": [
-      { "name": "auctionId", "type": "uint256" }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-];
+const auctionContractABI = [ /* ABI */ ];
 
-// Predefined currency token address
 const currencyTokenAddress = '0xbFD5FA9e2e319dFBE03Ef42d38248A2B987Bb6c4';
 
 const CreateAuction = () => {
+  const now = new Date();
+  const defaultStart = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes from now
+  const defaultEnd = new Date(defaultStart.getTime() + 7 * 24 * 60 * 60 * 1000); // One week later
+
   const [formData, setFormData] = useState({
     assetContract: '',
     tokenId: 0,
     minimumBidAmount: 0,
-    buyNowPrice: 0,  // Changed to buyNowPrice for clarity
-    startTimestamp: 0,
-    endTimestamp: 0
+    buyoutBidAmount: 0,
+    timeBufferInSeconds: 0,
+    startTimestamp: Math.floor(defaultStart.getTime() / 1000),
+    endTimestamp: Math.floor(defaultEnd.getTime() / 1000),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
+  };
+
+  const handleDateChange = (field: 'startTimestamp' | 'endTimestamp', date: Date | null) => {
+    if (date instanceof Date) {
+      const timestamp = Math.floor(date.getTime() / 1000); // Convert to Unix timestamp in seconds
+      setFormData((prevState) => ({
+        ...prevState,
+        [field]: timestamp,
+      }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -64,20 +54,19 @@ const CreateAuction = () => {
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(auctionContractAddress, auctionContractABI, signer);
 
-    // Convert `minimumBidAmount` and `buyNowPrice` to the smallest unit (using 18 decimals)
-    const minimumBidAmountInWei = parseUnits(formData.minimumBidAmount.toString(), 18);
-    const buyNowPriceInWei = parseUnits(formData.buyNowPrice.toString(), 18);
+    const minimumBidAmountInWei = ethers.parseUnits(Number(formData.minimumBidAmount).toString(), 18);
+    const buyoutBidAmountInWei = ethers.parseUnits(Number(formData.buyoutBidAmount).toString(), 18);
 
     try {
       const tx = await contract.createAuction(
         formData.assetContract,
         formData.tokenId,
-        1, // Always 1 quantity
-        currencyTokenAddress, // Use the predefined currency token address
+        1,
+        currencyTokenAddress,
         minimumBidAmountInWei,
-        buyNowPriceInWei,  // Buy Now Price instead of Buyout Bid Amount
-        300, // Fixed buffer time of 300 seconds
-        250, // Always 250 bps for bid buffer
+        buyoutBidAmountInWei,
+        300,
+        250,
         formData.startTimestamp,
         formData.endTimestamp
       );
@@ -93,25 +82,45 @@ const CreateAuction = () => {
       <h1 className="text-3xl font-bold mb-4">Create Auction</h1>
 
       {Object.keys(formData).map((key) => {
-        if (key !== 'quantity' && key !== 'timeBufferInSeconds' && key !== 'bidBufferBps') {  // Skip these fields
+        if (key !== 'quantity' && key !== 'bidBufferBps' && key !== 'timeBufferInSeconds') {
           return (
             <div key={key}>
-              <label htmlFor={key} className="block font-medium">
+              <label htmlFor={key} className="block font-medium text-[#02de73]">
                 {key === 'assetContract' ? 'NFT Contract Address' : key.replace(/([A-Z])/g, ' $1').toUpperCase()}
               </label>
-              <Input
-                id={key}
-                name={key}
-                value={formData[key as keyof typeof formData]}
-                onChange={handleChange}
-                placeholder={`Enter ${key}`}
-              />
+              {key === 'startTimestamp' || key === 'endTimestamp' ? (
+                <div className="flex items-center relative">
+                  <FaCalendarAlt
+                    className="absolute left-2 top-2 text-[#02de73] cursor-pointer"
+                    onClick={() => document.getElementById(`${key}-datepicker`)?.click()} // Simulates click on DatePicker
+                  />
+                  <DatePicker
+                    id={`${key}-datepicker`}
+                    selected={
+                      typeof formData[key as keyof typeof formData] === 'number'
+                        ? new Date((formData[key as keyof typeof formData] as number) * 1000)
+                        : null
+                    }
+                    onChange={(date: Date) => handleDateChange(key as 'startTimestamp' | 'endTimestamp', date)}
+                    showTimeSelect
+                    dateFormat="Pp"
+                    className="w-full pl-8" // Add padding for the calendar icon
+                  />
+                </div>
+              ) : (
+                <Input
+                  id={key}
+                  name={key}
+                  value={formData[key as keyof typeof formData]}
+                  onChange={handleChange}
+                  placeholder={`Enter ${key}`}
+                />
+              )}
             </div>
           );
         }
       })}
 
-      {/* Submit Button */}
       <Button onClick={handleSubmit} className="bg-[#02de73] text-black w-full">
         Create Auction
       </Button>
