@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ethers } from 'ethers';
+import { ethers } from 'ethers';  // Import ethers as usual
+
+// Destructure parseUnits from ethers
+const { parseUnits } = ethers;
 
 // Smart contract ABI and address (same as before)
 const auctionContractAddress = '0xdbEf63D610347231B38c141465A3671abb7BCCe5';
@@ -38,8 +41,7 @@ const CreateAuction = () => {
     assetContract: '',
     tokenId: 0,
     minimumBidAmount: 0,
-    buyoutBidAmount: 0,
-    timeBufferInSeconds: 0,
+    buyNowPrice: 0,  // Changed to buyNowPrice for clarity
     startTimestamp: 0,
     endTimestamp: 0
   });
@@ -62,9 +64,9 @@ const CreateAuction = () => {
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(auctionContractAddress, auctionContractABI, signer);
 
-    // Convert `minimumBidAmount` and `buyoutBidAmount` to the smallest unit (using 18 decimals)
-    const minimumBidAmountInWei = ethers.parseUnits(formData.minimumBidAmount.toString(), 18);
-    const buyoutBidAmountInWei = ethers.parseUnits(formData.buyoutBidAmount.toString(), 18);
+    // Convert `minimumBidAmount` and `buyNowPrice` to the smallest unit (using 18 decimals)
+    const minimumBidAmountInWei = parseUnits(formData.minimumBidAmount.toString(), 18);
+    const buyNowPriceInWei = parseUnits(formData.buyNowPrice.toString(), 18);
 
     try {
       const tx = await contract.createAuction(
@@ -73,8 +75,8 @@ const CreateAuction = () => {
         1, // Always 1 quantity
         currencyTokenAddress, // Use the predefined currency token address
         minimumBidAmountInWei,
-        buyoutBidAmountInWei,
-        formData.timeBufferInSeconds,
+        buyNowPriceInWei,  // Buy Now Price instead of Buyout Bid Amount
+        300, // Fixed buffer time of 300 seconds
         250, // Always 250 bps for bid buffer
         formData.startTimestamp,
         formData.endTimestamp
@@ -91,7 +93,7 @@ const CreateAuction = () => {
       <h1 className="text-3xl font-bold mb-4">Create Auction</h1>
 
       {Object.keys(formData).map((key) => {
-        if (key !== 'quantity' && key !== 'bidBufferBps') {  // Skip quantity and bidBufferBps
+        if (key !== 'quantity' && key !== 'timeBufferInSeconds' && key !== 'bidBufferBps') {  // Skip these fields
           return (
             <div key={key}>
               <label htmlFor={key} className="block font-medium">
