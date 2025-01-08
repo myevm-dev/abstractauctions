@@ -96,7 +96,7 @@ const ProductList = () => {
               <SelectItem value="featured">Featured</SelectItem>
               <SelectItem value="price-asc">Price: Low to High</SelectItem>
               <SelectItem value="price-desc">Price: High to Low</SelectItem>
-              <SelectItem value="rating">Highest Rated</SelectItem>
+              <SelectItem value="rating">Ending Soonest</SelectItem>
             </SelectContent>
           </Select>
         </div>

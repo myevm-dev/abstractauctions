@@ -11,32 +11,29 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
-            alt="Hero background"
-            className="w-full h-full object-cover brightness-50"
-          />
-        </div>
         <div className="container mx-auto px-4 relative z-10 text-white text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Tech Excellence Delivered
+          {/* Abstract Auctions heading with the desired color */}
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-[#02de73]">
+            Abstract Auctions
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
-            Discover premium tech products that elevate your digital lifestyle. Quality meets innovation in every purchase.
+            Create an Auction for any Collection on Abstract Chain
           </p>
           <Button 
             onClick={() => navigate('/products')}
-            className="bg-neutral-900 hover:bg-neutral-800 text-white px-8 py-6 text-lg"
+            className="bg-[#02de73] hover:bg-neutral-800 text-black px-8 py-6 text-lg"
           >
-            Explore Products
+            Explore Auctions
           </Button>
         </div>
       </div>
 
       {/* Featured Products Preview */}
       <div className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">Featured Products</h2>
+        {/* Featured Auctions heading with the desired color */}
+        <h2 className="text-3xl font-bold mb-8 text-center text-[#02de73]">
+          Featured Auctions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featuredProducts.map((product) => (
             <Link 

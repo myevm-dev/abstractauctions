@@ -79,11 +79,12 @@ const ProductDetails = () => {
             <p>{product.description}</p>
           </div>
 
+          {/* Updated "Bid" button with color */}
           <Button
             onClick={handleAddToCart}
-            className="w-full md:w-auto bg-neutral-900 hover:bg-neutral-800 text-white"
+            className="w-full md:w-auto bg-[#02de73] hover:bg-neutral-800 text-black"
           >
-            Add to Cart
+            Bid
           </Button>
         </div>
       </div>

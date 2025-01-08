@@ -36,21 +36,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="p-4">
           <h3 className="font-semibold text-lg mb-1 truncate">{product.name}</h3>
           
-          <div className="flex items-center gap-1 mb-2">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-4 w-4 ${
-                  i < Math.floor(product.rating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
-                }`}
-              />
-            ))}
-            <span className="text-sm text-muted-foreground ml-1">
-              {product.rating}
-            </span>
-          </div>
+
           
           <div className="flex items-center justify-between mt-4">
             <span className="text-lg font-bold text-brand-600">
@@ -58,9 +44,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
             <Button
               onClick={handleAddToCart}
-              className="bg-brand-600 hover:bg-brand-700 text-white"
+              className="bg-[#02de73] hover:bg-neutral-800 text-black"
             >
-              Add to Cart
+              Bid
             </Button>
           </div>
         </div>
