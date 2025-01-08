@@ -9,6 +9,12 @@ import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import Home from "./pages/Home";
 import CreateAuction from "./pages/MyAuction";
+import { Provider, Wallet } from "zksync-ethers"; // Correctly import Wallet
+import { ethers } from "ethers"; // Correctly import ethers
+
+// Set up Abstract Chain's provider (replace with actual Abstract URL)
+const provider = new Provider("https://api.testnet.abs.xyz"); // Update with the correct Abstract endpoint
+const wallet = new Wallet(ethers.Wallet.createRandom().privateKey, provider);
 
 const queryClient = new QueryClient();
 
@@ -20,7 +26,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <div className="min-h-screen flex flex-col">
-            <Navbar />
+            <Navbar wallet={wallet} /> {/* Pass wallet to Navbar */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Navigate to="/" replace />} />
