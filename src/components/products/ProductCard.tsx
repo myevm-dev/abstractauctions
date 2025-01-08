@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+
 import { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart";

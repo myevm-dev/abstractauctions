@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ProductGrid from "@/components/products/ProductGrid";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { products, categories } from "@/lib/products";
+import { products, collections } from "@/lib/products";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -17,7 +17,7 @@ const ProductList = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   useEffect(() => {
@@ -31,10 +31,10 @@ const ProductList = () => {
       );
     }
 
-    // Apply category filter
-    if (selectedCategories.length > 0) {
+    // Apply Collection filter
+    if (selectedCollections.length > 0) {
       sorted = sorted.filter((product) =>
-        selectedCategories.includes(product.category)
+        selectedCollections.includes(product.collection)
       );
     }
 
@@ -65,25 +65,25 @@ const ProductList = () => {
     }
 
     setFilteredProducts(sorted);
-  }, [sortBy, minPrice, maxPrice, searchQuery, selectedCategories]);
+  }, [sortBy, minPrice, maxPrice, searchQuery, selectedCollections]);
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
+  const handleCollectionChange = (collection: string) => {
+    setSelectedCollections((prev) =>
+      prev.includes(collection)
+        ? prev.filter((c) => c !== collection)
+        : [...prev, collection]
     );
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <h1 className="text-3xl font-bold">Our Products</h1>
+      <h1 className="text-3xl font-bold">Live Auctions</h1>
         
         <div className="flex items-center gap-4 w-full md:w-auto">
           <Input
             type="search"
-            placeholder="Search products..."
+            placeholder="Search..."
             className="w-full md:w-[300px]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -126,20 +126,20 @@ const ProductList = () => {
               </div>
               
               <div>
-                <Label className="mb-2 block">Categories</Label>
+                <Label className="mb-2 block">Collections</Label>
                 <div className="space-y-2">
-                  {categories.map((category) => (
-                    <div key={category} className="flex items-center space-x-2">
+                  {collections.map((collection) => (
+                    <div key={collection} className="flex items-center space-x-2">
                       <Checkbox
-                        id={category}
-                        checked={selectedCategories.includes(category)}
-                        onCheckedChange={() => handleCategoryChange(category)}
+                        id={collection}
+                        checked={selectedCollections.includes(collection)}
+                        onCheckedChange={() => handleCollectionChange(collection)}
                       />
                       <label
-                        htmlFor={category}
+                        htmlFor={collection}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        {category}
+                        {collection}
                       </label>
                     </div>
                   ))}

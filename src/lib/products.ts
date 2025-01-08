@@ -8,7 +8,7 @@ export const products: Product[] = [
     price: 1299.99,
     image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
     rating: 4.5,
-    category: "Electronics",
+    collection: "Electronics",
     brand: "TechPro",
     inStock: true
   },
@@ -19,7 +19,7 @@ export const products: Product[] = [
     price: 249.99,
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
     rating: 4.8,
-    category: "Electronics",
+    collection: "Electronics",
     brand: "AudioMax",
     inStock: true
   },
@@ -30,7 +30,7 @@ export const products: Product[] = [
     price: 299.99,
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
     rating: 4.3,
-    category: "Wearables",
+    collection: "Wearables",
     brand: "TechPro",
     inStock: true
   },
@@ -41,7 +41,7 @@ export const products: Product[] = [
     price: 199.99,
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     rating: 4.7,
-    category: "Home Appliances",
+    collection: "Home Appliances",
     brand: "HomeElite",
     inStock: true
   },
@@ -52,7 +52,7 @@ export const products: Product[] = [
     price: 349.99,
     image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
     rating: 4.6,
-    category: "Furniture",
+    collection: "Furniture",
     brand: "ComfortPro",
     inStock: true
   },
@@ -63,7 +63,7 @@ export const products: Product[] = [
     price: 699.99,
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
     rating: 4.9,
-    category: "Electronics",
+    collection: "Electronics",
     brand: "TechPro",
     inStock: true
   },
@@ -74,7 +74,7 @@ export const products: Product[] = [
     price: 79.99,
     image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf",
     rating: 4.4,
-    category: "Electronics",
+    collection: "Electronics",
     brand: "GameTech",
     inStock: true
   },
@@ -85,14 +85,14 @@ export const products: Product[] = [
     price: 129.99,
     image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb",
     rating: 4.2,
-    category: "Smart Home",
+    collection: "Smart Home",
     brand: "SecureHome",
     inStock: true
   }
 ];
 
-export const getProductsByCategory = (category: string) => {
-  return products.filter(product => product.category === category);
+export const getProductsByCollection = (collection: string) => {
+  return products.filter(product => product.collection === collection);
 };
 
 export const getProductById = (id: string) => {
@@ -101,8 +101,8 @@ export const getProductById = (id: string) => {
 
 export const getSimilarProducts = (product: Product) => {
   return products
-    .filter(p => p.category === product.category && p.id !== product.id)
+    .filter(p => p.collection === product.collection && p.id !== product.id)
     .slice(0, 4);
 };
 
-export const categories = Array.from(new Set(products.map(product => product.category)));
+export const collections = Array.from(new Set(products.map(product => product.collection)));
