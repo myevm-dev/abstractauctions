@@ -1,33 +1,35 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
-import { useCartStore } from "@/store/cart";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useCartStore } from "@/store/cart"; // This could represent bids
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export function CartDrawer() {
+export function MyBidsDrawer() {
   const { items, removeItem, updateQuantity, getTotalItems, getTotalPrice } = useCartStore();
 
   return (
     <Sheet>
+      {/* Trigger button that opens the drawer */}
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <ShoppingCart className="h-5 w-5" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative border-2 border-[#02de73] hover:bg-[#02de73] text-[#02de73] hover:text-white transition-colors py-2 px-8 flex items-center justify-center"
+        >
+          {/* Removed the icon, only text now */}
+          <span className="text-sm">MyBids</span>
           {getTotalItems() > 0 && (
-            <span className="absolute -top-1 -right-1 bg-brand-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-[#02de73] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
               {getTotalItems()}
             </span>
           )}
         </Button>
       </SheetTrigger>
+      
+      {/* Sheet Content - This will hold the drawer content */}
       <SheetContent className="w-full sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle>Shopping Cart ({getTotalItems()} items)</SheetTitle>
+          <SheetTitle>MyBids ({getTotalItems()} items)</SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-8rem)] mt-4">
           <div className="space-y-4">
