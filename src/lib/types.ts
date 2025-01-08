@@ -4,7 +4,6 @@ export interface Product {
   description: string;
   price: number;
   image: string;
-  rating: number;
   collection: string;
   brand: string;
   inStock: boolean;

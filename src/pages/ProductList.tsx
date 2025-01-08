@@ -56,9 +56,7 @@ const ProductList = () => {
       case "price-desc":
         sorted.sort((a, b) => b.price - a.price);
         break;
-      case "rating":
-        sorted.sort((a, b) => b.rating - a.rating);
-        break;
+
       default:
         // featured - keep original order
         break;
@@ -96,7 +94,7 @@ const ProductList = () => {
               <SelectItem value="featured">Featured</SelectItem>
               <SelectItem value="price-asc">Price: Low to High</SelectItem>
               <SelectItem value="price-desc">Price: High to Low</SelectItem>
-              <SelectItem value="rating">Ending Soonest</SelectItem>
+
             </SelectContent>
           </Select>
         </div>

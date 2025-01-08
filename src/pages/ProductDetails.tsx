@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Star } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/cart';
 import { getProductById, getSimilarProducts } from '@/lib/products';
@@ -55,25 +55,12 @@ const ProductDetails = () => {
         <div className="space-y-6">
           <h1 className="text-3xl font-bold">{product.name}</h1>
           
-          <div className="flex items-center gap-2">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-5 w-5 ${
-                  i < Math.floor(product.rating)
-                    ? 'fill-neutral-900 text-neutral-900'
-                    : 'text-neutral-300'
-                }`}
-              />
-            ))}
-            <span className="text-sm text-muted-foreground">
-              ({product.rating})
-            </span>
-          </div>
 
-          <div className="text-2xl font-bold text-neutral-900">
+
+          <div className="text-2xl font-bold text-[#00ff99]">
             ${product.price.toFixed(2)}
           </div>
+
 
           <div className="prose max-w-none">
             <p>{product.description}</p>
@@ -90,7 +77,7 @@ const ProductDetails = () => {
       </div>
 
       <div className="mt-16">
-        <h2 className="text-2xl font-bold mb-8">Similar Products</h2>
+        <h2 className="text-2xl font-bold mb-8">More Auctions</h2>
         <Carousel className="w-full">
           <CarouselContent>
             {similarProducts.map((product) => (
@@ -112,7 +99,7 @@ const ProductDetails = () => {
                   </div>
                 </div>
                 <h3 className="mt-2 font-semibold">{product.name}</h3>
-                <p className="text-neutral-900 font-bold">${product.price.toFixed(2)}</p>
+                <p className="text-[#02de73] font-bold">${product.price.toFixed(2)}</p>
               </CarouselItem>
             ))}
           </CarouselContent>
