@@ -18,9 +18,9 @@ const CreateAuction = () => {
 
   const [formData, setFormData] = useState({
     assetContract: '',
-    tokenId: 0,
-    minimumBidAmount: 0,
-    buyoutBidAmount: 0,
+    tokenId: '',
+    minimumBidAmount: '',
+    buyoutBidAmount: '',
     timeBufferInSeconds: 0,
     startTimestamp: Math.floor(defaultStart.getTime() / 1000),
     endTimestamp: Math.floor(defaultEnd.getTime() / 1000),
@@ -54,8 +54,8 @@ const CreateAuction = () => {
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(auctionContractAddress, auctionContractABI, signer);
 
-    const minimumBidAmountInWei = ethers.parseUnits(Number(formData.minimumBidAmount).toString(), 18);
-    const buyoutBidAmountInWei = ethers.parseUnits(Number(formData.buyoutBidAmount).toString(), 18);
+    const minimumBidAmountInWei = ethers.parseUnits(formData.minimumBidAmount, 18);
+    const buyoutBidAmountInWei = ethers.parseUnits(formData.buyoutBidAmount, 18);
 
     try {
       const tx = await contract.createAuction(
@@ -78,15 +78,21 @@ const CreateAuction = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-[760px] mx-auto space-y-6">
       <h1 className="text-3xl font-bold mb-4">Create Auction</h1>
 
       {Object.keys(formData).map((key) => {
         if (key !== 'quantity' && key !== 'bidBufferBps' && key !== 'timeBufferInSeconds') {
           return (
             <div key={key}>
-              <label htmlFor={key} className="block font-medium text-[#02de73]">
-                {key === 'assetContract' ? 'NFT Contract Address' : key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+              <label htmlFor={key} className="block font-medium text-[#02de73] mb-2">
+                {key === 'assetContract'
+                  ? 'NFT Contract Address'
+                  : key === 'minimumBidAmount'
+                  ? 'Starting Bid Amount'
+                  : key === 'buyoutBidAmount'
+                  ? 'Buy Now Price'
+                  : key.replace(/([A-Z])/g, ' $1').toUpperCase()}
               </label>
               {key === 'startTimestamp' || key === 'endTimestamp' ? (
                 <div className="flex items-center relative">
@@ -111,9 +117,16 @@ const CreateAuction = () => {
                 <Input
                   id={key}
                   name={key}
+                  type={key === 'tokenId' || key === 'minimumBidAmount' || key === 'buyoutBidAmount' ? 'number' : 'text'}
                   value={formData[key as keyof typeof formData]}
                   onChange={handleChange}
-                  placeholder={`Enter ${key}`}
+                  placeholder={
+                    key === 'minimumBidAmount'
+                      ? 'Enter Starting Bid'
+                      : key === 'buyoutBidAmount'
+                      ? 'Enter Buy Now Price'
+                      : `Enter ${key}`
+                  }
                 />
               )}
             </div>
