@@ -1,4 +1,3 @@
-
 import { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart";
@@ -32,22 +31,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
             className="product-image"
           />
         </div>
-        
+
         <div className="p-4">
           <h3 className="font-semibold text-lg mb-1 truncate">{product.name}</h3>
-          
 
-          
           <div className="flex items-center justify-between mt-4">
             <span className="text-lg font-bold text-brand-600">
               ${product.price.toFixed(2)}
             </span>
-            <Button
-              onClick={handleAddToCart}
-              className="bg-[#02de73] hover:bg-neutral-800 text-black"
+            {/* Wrap the button with a Link */}
+            <Link
+              to={`/product/${product.id}`}
+              className="bg-[#02de73] hover:bg-neutral-800 text-black rounded-lg px-4 py-2 flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()} // Prevent outer Link click
             >
-              Bid
-            </Button>
+              View
+            </Link>
           </div>
         </div>
       </div>

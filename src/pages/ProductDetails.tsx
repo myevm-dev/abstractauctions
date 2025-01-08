@@ -41,6 +41,20 @@ const ProductDetails = () => {
     });
   };
 
+  const handleWrapPENGU = () => {
+    toast({
+      title: "Wrap PENGU",
+      description: "PENGU has been wrapped successfully.",
+    });
+  };
+
+  const handleUnwrapBcPENGU = () => {
+    toast({
+      title: "Unwrap bcPENGU",
+      description: "bcPENGU has been unwrapped successfully.",
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid md:grid-cols-2 gap-8">
@@ -71,12 +85,26 @@ const ProductDetails = () => {
             <p>{product.description}</p>
           </div>
 
-          <Button
-            onClick={handleAddToCart}
-            className="w-full md:w-auto bg-[#02de73] hover:bg-neutral-800 text-black"
-          >
-            Bid
-          </Button>
+          <div className="flex flex-wrap gap-4">
+            <Button
+              onClick={handleAddToCart}
+              className="bg-[#02de73] hover:bg-neutral-800 text-black"
+            >
+              Bid
+            </Button>
+            <Button
+              onClick={handleWrapPENGU}
+              className="bg-[#02de73] hover:bg-neutral-800 text-black"
+            >
+              Wrap PENGU
+            </Button>
+            <Button
+              onClick={handleUnwrapBcPENGU}
+              className="bg-[#02de73] hover:bg-neutral-800 text-black"
+            >
+              Unwrap bcPENGU
+            </Button>
+          </div>
         </div>
       </div>
 
