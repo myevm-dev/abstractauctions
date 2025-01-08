@@ -10,7 +10,8 @@ const faqs: FAQItem[] = [
   { question: "How do I participate in an auction?", answer: "To participate, connect your wallet, browse auctions, and place bids." },
   { question: "What are Bid Credits?", answer: "Bid Credits are a Yield Bearing Version of Wrapped Pengu. This makes all bids in waiting productive and creates better outcomes for auctions." },
   { question: "How do I create an auction?", answer: "Click on 'Create' in the navigation bar, fill in the auction details, and submit it to the blockchain." },
-  { question: "Can I Cancel an Auction?", answer: "Nope." },
+  { question: "Can I Cancel an Auction?", answer: "No, to promote a healthy platform we require all auctions to play out." },
+  { question: "Can I Cancel a Bid?", answer: "If your bid is winning, you may not cancel your bid, if you have been outbid you may withdraw your bid." },
   { question: "Are thier Fees on this Platform?", answer: "Auction Creators get charged a 3% Fee on the final bid and all bids get charged a 0.33% fee on submission." },
 
 ];
