@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ethers } from 'ethers';
@@ -21,10 +21,12 @@ const CreateAuction = () => {
     tokenId: '',
     minimumBidAmount: '',
     buyoutBidAmount: '',
-    timeBufferInSeconds: 0,
     startTimestamp: Math.floor(defaultStart.getTime() / 1000),
     endTimestamp: Math.floor(defaultEnd.getTime() / 1000),
   });
+
+  const [nftData, setNftData] = useState<{ image: string; name: string; description: string } | null>(null);
+  const [loadingNft, setLoadingNft] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,13 +38,45 @@ const CreateAuction = () => {
 
   const handleDateChange = (field: 'startTimestamp' | 'endTimestamp', date: Date | null) => {
     if (date instanceof Date) {
-      const timestamp = Math.floor(date.getTime() / 1000); // Convert to Unix timestamp in seconds
+      const timestamp = Math.floor(date.getTime() / 1000);
       setFormData((prevState) => ({
         ...prevState,
         [field]: timestamp,
       }));
     }
   };
+
+  const fetchNftData = async () => {
+    if (!formData.assetContract || !formData.tokenId) return;
+    setLoadingNft(true);
+
+    try {
+      const response = await fetch(
+        `https://api.testnet.abs.xyz/v1/nft/${formData.assetContract}/${formData.tokenId}`
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch NFT data');
+      }
+
+      const metadata = await response.json();
+
+      setNftData({
+        image: metadata.image || metadata.image_url,
+        name: metadata.name || 'Unknown NFT',
+        description: metadata.description || 'No description available',
+      });
+    } catch (error) {
+      console.error('Error fetching NFT data:', error);
+      setNftData(null);
+    } finally {
+      setLoadingNft(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNftData();
+  }, [formData.assetContract, formData.tokenId]);
 
   const handleSubmit = async () => {
     if (typeof window.ethereum === 'undefined') {
@@ -54,8 +88,8 @@ const CreateAuction = () => {
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(auctionContractAddress, auctionContractABI, signer);
 
-    const minimumBidAmountInWei = ethers.parseUnits(formData.minimumBidAmount, 18);
-    const buyoutBidAmountInWei = ethers.parseUnits(formData.buyoutBidAmount, 18);
+    const minimumBidAmountInWei = ethers.parseUnits(formData.minimumBidAmount || '0', 18);
+    const buyoutBidAmountInWei = ethers.parseUnits(formData.buyoutBidAmount || '0', 18);
 
     try {
       const tx = await contract.createAuction(
@@ -81,57 +115,61 @@ const CreateAuction = () => {
     <div className="max-w-[760px] mx-auto space-y-6">
       <h1 className="text-3xl font-bold mb-4">Create Auction</h1>
 
+      {loadingNft ? (
+        <p>Loading NFT...</p>
+      ) : nftData ? (
+        <div className="p-4 border rounded-md">
+          <img src={nftData.image} alt={nftData.name} className="w-full h-auto mb-2" />
+          <h2 className="text-xl font-bold">{nftData.name}</h2>
+          <p>{nftData.description}</p>
+        </div>
+      ) : (
+        <p>No NFT preview available. Enter contract and token ID to view.</p>
+      )}
+
       {Object.keys(formData).map((key) => {
-        if (key !== 'quantity' && key !== 'bidBufferBps' && key !== 'timeBufferInSeconds') {
-          return (
-            <div key={key}>
-              <label htmlFor={key} className="block font-medium text-[#02de73] mb-2">
-                {key === 'assetContract'
-                  ? 'NFT Contract Address'
-                  : key === 'minimumBidAmount'
-                  ? 'Starting Bid Amount'
-                  : key === 'buyoutBidAmount'
-                  ? 'Buy Now Price'
-                  : key.replace(/([A-Z])/g, ' $1').toUpperCase()}
-              </label>
-              {key === 'startTimestamp' || key === 'endTimestamp' ? (
-                <div className="flex items-center relative">
-                  <FaCalendarAlt
-                    className="absolute left-2 top-2 text-[#02de73] cursor-pointer"
-                    onClick={() => document.getElementById(`${key}-datepicker`)?.click()} // Simulates click on DatePicker
-                  />
-                  <DatePicker
-                    id={`${key}-datepicker`}
-                    selected={
-                      typeof formData[key as keyof typeof formData] === 'number'
-                        ? new Date((formData[key as keyof typeof formData] as number) * 1000)
-                        : null
-                    }
-                    onChange={(date: Date) => handleDateChange(key as 'startTimestamp' | 'endTimestamp', date)}
-                    showTimeSelect
-                    dateFormat="Pp"
-                    className="w-full pl-8" // Add padding for the calendar icon
-                  />
-                </div>
-              ) : (
-                <Input
-                  id={key}
-                  name={key}
-                  type={key === 'tokenId' || key === 'minimumBidAmount' || key === 'buyoutBidAmount' ? 'number' : 'text'}
-                  value={formData[key as keyof typeof formData]}
-                  onChange={handleChange}
-                  placeholder={
-                    key === 'minimumBidAmount'
-                      ? 'Enter Starting Bid'
-                      : key === 'buyoutBidAmount'
-                      ? 'Enter Buy Now Price'
-                      : `Enter ${key}`
-                  }
+        const isTimestamp = key === 'startTimestamp' || key === 'endTimestamp';
+        const label =
+          key === 'assetContract'
+            ? 'NFT Contract Address'
+            : key === 'minimumBidAmount'
+            ? 'Starting Bid Amount'
+            : key === 'buyoutBidAmount'
+            ? 'Buy Now Price'
+            : key.replace(/([A-Z])/g, ' $1').toUpperCase();
+
+        return (
+          <div key={key}>
+            <label htmlFor={key} className="block font-medium text-[#02de73] mb-2">
+              {label}
+            </label>
+            {isTimestamp ? (
+              <div className="flex items-center relative">
+                <FaCalendarAlt
+                  className="absolute left-2 top-2 text-[#02de73] cursor-pointer"
+                  onClick={() => document.getElementById(`${key}-datepicker`)?.click()}
                 />
-              )}
-            </div>
-          );
-        }
+                <DatePicker
+                  id={`${key}-datepicker`}
+                  selected={new Date((formData[key as keyof typeof formData] as number) * 1000)}
+                  onChange={(date: Date) => handleDateChange(key as 'startTimestamp' | 'endTimestamp', date)}
+                  showTimeSelect
+                  dateFormat="Pp"
+                  className="w-full pl-8"
+                />
+              </div>
+            ) : (
+              <Input
+                id={key}
+                name={key}
+                type="text"
+                value={formData[key as keyof typeof formData]}
+                onChange={handleChange}
+                placeholder={label}
+              />
+            )}
+          </div>
+        );
       })}
 
       <Button onClick={handleSubmit} className="bg-[#02de73] text-black w-full">
