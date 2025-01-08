@@ -19,7 +19,8 @@ const Navbar = () => {
             Abstract Auctions
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/products" className="text-sm hover:text-brand-600 transition-colors">Auctions</Link>
+            <Link to="/products" className="text-sm hover:text-brand-600 transition-colors">LIVE AUCTIONS</Link>
+            <Link to="/create-auction" className="text-sm hover:text-brand-600 transition-colors">MY AUCTIONS</Link>
           </div>
         </div>
         

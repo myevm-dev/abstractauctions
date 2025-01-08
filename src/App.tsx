@@ -8,6 +8,7 @@ import Navbar from "./components/layout/Navbar";
 import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import Home from "./pages/Home";
+import CreateAuction from "./pages/MyAuction";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Navigate to="/" replace />} />
+              <Route path="/create-auction" element={<CreateAuction />} />
               <Route path="/products" element={<ProductList />} />
               <Route path="/product/:id" element={<ProductDetails />} />
             </Routes>
