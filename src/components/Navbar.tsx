@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ wallet }) => {
             onClick={isConnected ? handleDisconnectWallet : handleConnectWallet} // Toggle between connect and disconnect
             className="bg-[#02de73] text-black px-6 py-2 rounded-md"
           >
-            {isConnected ? `Connected: ${walletAddress?.slice(0, 6)}...${walletAddress?.slice(-4)}` : "Connect Wallet"}
+          {isConnected ? `Connected: ${walletAddress?.slice(0, 6)}...${walletAddress?.slice(-4)}` : "Connect Wallet"}
           </Button>
         </div>
       </div>
