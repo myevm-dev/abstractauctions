@@ -12,6 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import BidList from '@/components/BidList'; // Import BidList
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -20,6 +21,13 @@ const ProductDetails = () => {
   const similarProducts = product ? getSimilarProducts(product) : [];
   const addItem = useCartStore((state) => state.addItem);
   const [isZoomed, setIsZoomed] = useState(false);
+
+  // Sample bids for now (you can replace this with actual bid data)
+  const bids = [
+    { username: 'User1', amount: 120 },
+    { username: 'User2', amount: 150 },
+    { username: 'User3', amount: 130 },
+  ];
 
   if (!product) {
     return <div>Product not found</div>;
@@ -54,19 +62,15 @@ const ProductDetails = () => {
 
         <div className="space-y-6">
           <h1 className="text-3xl font-bold">{product.name}</h1>
-          
-
 
           <div className="text-2xl font-bold text-[#00ff99]">
             ${product.price.toFixed(2)}
           </div>
 
-
           <div className="prose max-w-none">
             <p>{product.description}</p>
           </div>
 
-          {/* Updated "Bid" button with color */}
           <Button
             onClick={handleAddToCart}
             className="w-full md:w-auto bg-[#02de73] hover:bg-neutral-800 text-black"
@@ -75,6 +79,9 @@ const ProductDetails = () => {
           </Button>
         </div>
       </div>
+
+      {/* Current Bids Section */}
+      <BidList bids={bids} />
 
       <div className="mt-16">
         <h2 className="text-2xl font-bold mb-8">More Auctions</h2>

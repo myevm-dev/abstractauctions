@@ -43,7 +43,7 @@ export function MyBidsDrawer() {
                 <div className="flex-1">
                   <h3 className="font-semibold">{product.name}</h3>
                   <p className="text-sm text-muted-foreground">
-                    ${product.price.toFixed(2)}
+                    {product.price.toFixed(2)} Pengu
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <Button
@@ -82,7 +82,7 @@ export function MyBidsDrawer() {
             <div className="flex justify-between mb-4">
               <span className="font-semibold">Total:</span>
               <span className="font-semibold">
-                ${getTotalPrice().toFixed(2)}
+                {getTotalPrice().toFixed(2)} Pengu
               </span>
             </div>
             <Button className="w-full">Checkout</Button>
