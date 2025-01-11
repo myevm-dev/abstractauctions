@@ -50,6 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ wallet }) => {
     <nav className="border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
+          <img src="/abstractauctionslogo.svg" alt="Abstract Auctions Logo" className="h-10" /> {/* Added logo */}
           <Link to="/" className="text-2xl font-bold text-[#02de73]">
             Abstract Auctions
           </Link>

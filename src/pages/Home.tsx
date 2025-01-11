@@ -14,6 +14,8 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center">
         <div className="container mx-auto px-4 relative z-10 text-white text-center">
+          {/* Logo above the title */}
+          <img src="/abstractauctionslogo.svg" alt="Abstract Auctions Logo" className="h-56 mx-auto mb-6" />
           <h1 className="text-5xl md:text-7xl font-bold mb-6 text-[#02de73]">
             Abstract Auctions
           </h1>
